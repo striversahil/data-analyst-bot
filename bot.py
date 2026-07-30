@@ -4,7 +4,7 @@ import asyncio
 from pathlib import Path
 from aiohttp import web
 from telegram import Update
-from telegram.ext import Application, MessageHandler, filters, ContextTypes
+from telegram.ext import Application, MessageHandler, filters, ContextTypes, CommandHandler
 from dotenv import load_dotenv
 
 from agent import DataAnalystAgent
@@ -22,6 +22,19 @@ class DataAnalystBot:
     def __init__(self):
         self.logger = None
         self.agent = None
+    
+    async def handle_start(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
+        """Handle /start command."""
+        welcome = (
+            "🤖 Data Analyst Bot\n\n"
+            "Send me a data analysis question and I'll reply with a JSON answer.\n\n"
+            "Example questions:\n"
+            "• Which state has the highest maternal mortality rate based on MOSPI data?\n"
+            "• Forecast flow rate for these inputs: [10.5, 20.3, 30.1]\n"
+            "• Build a model to forecast flow rate\n\n"
+            "I'll reply with exactly one JSON object containing 'answer' and 'log_url'."
+        )
+        await update.message.reply_text(welcome)
     
     async def handle_message(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         """Handle incoming Telegram messages."""
@@ -107,6 +120,7 @@ def run_bot():
     # Build application
     application = Application.builder().token(BOT_TOKEN).build()
     bot = DataAnalystBot()
+    application.add_handler(CommandHandler("start", bot.handle_start))
     application.add_handler(
         MessageHandler(filters.TEXT & ~filters.COMMAND, bot.handle_message)
     )
@@ -138,6 +152,7 @@ async def run_deployment():
     # Setup bot
     application = Application.builder().token(BOT_TOKEN).build()
     bot = DataAnalystBot()
+    application.add_handler(CommandHandler("start", bot.handle_start))
     application.add_handler(
         MessageHandler(filters.TEXT & ~filters.COMMAND, bot.handle_message)
     )
