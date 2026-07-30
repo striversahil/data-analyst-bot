@@ -4,7 +4,7 @@
     "builder": "RAILPACK"
   },
   "deploy": {
-    "startCommand": "ENABLE_LOG_SERVER=true PORT=8080 python main.py",
+    "startCommand": "python main.py",
     "healthcheckPath": "/logs",
     "healthcheckTimeout": 300,
     "restartPolicyType": "ON_FAILURE"
