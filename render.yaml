@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: data-analyst-bot
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: python main.py
+    envVars:
+      - key: BOT_TOKEN
+        sync: false
+      - key: LOG_PUBLIC_URL
+        value: https://data-analyst-bot.onrender.com/logs
+      - key: PORT
+        value: "8080"
+    disk:
+      name: logs
+      mountPath: /app/logs
+      sizeGB: 1
