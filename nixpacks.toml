@@ -1,0 +1,8 @@
+[phases.setup]
+nixPkgs = ["python312", "python312Packages.pip"]
+
+[phases.install]
+cmds = ["pip install -r requirements.txt"]
+
+[start]
+cmd = "ENABLE_LOG_SERVER=true PORT=8080 python main.py"
